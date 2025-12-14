@@ -2093,6 +2093,103 @@ class Dreamina31TextToImage:
         except Exception as e:
             return ApiHandler.handle_image_generation_error("Dreamina v3.1 Text-to-Image", e)
 
+class Zimagelora:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "prompt": ("STRING", {"default": "", "multiline": True}),
+                "image_size": (
+                    [
+                        "square_hd",
+                        "square",
+                        "portrait_4_3",
+                        "portrait_16_9",
+                        "landscape_4_3",
+                        "landscape_16_9",
+                        "custom",
+                    ],
+                    {"default": "landscape_4_3"},
+                ),
+                "width": (
+                    "INT",
+                    {"default": 1024, "min": 512, "max": 1536, "step": 16},
+                ),
+                "height": (
+                    "INT",
+                    {"default": 768, "min": 512, "max": 1536, "step": 16},
+                ),
+                "num_inference_steps": ("INT", {"default": 28, "min": 1, "max": 50}),
+                "guidance_scale": (
+                    "FLOAT",
+                    {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1},
+                ),
+                "num_images": ("INT", {"default": 1, "min": 1, "max": 4}),
+                "enable_safety_checker": ("BOOLEAN", {"default": True}),
+            },
+            "optional": {
+                "seed": ("INT", {"default": -1}),
+                "lora_path_1": ("STRING", {"default": ""}),
+                "lora_scale_1": (
+                    "FLOAT",
+                    {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.05},
+                ),
+                "lora_path_2": ("STRING", {"default": ""}),
+                "lora_scale_2": (
+                    "FLOAT",
+                    {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.05},
+                ),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "generate_image"
+    CATEGORY = "FAL/Image"
+
+    def generate_image(
+        self,
+        prompt,
+        image_size,
+        width,
+        height,
+        num_inference_steps,
+        guidance_scale,
+        num_images,
+        enable_safety_checker,
+        seed=-1,
+        lora_path_1="",
+        lora_scale_1=1.0,
+        lora_path_2="",
+        lora_scale_2=1.0,
+    ):
+        arguments = {
+            "prompt": prompt,
+            "num_inference_steps": num_inference_steps,
+            "guidance_scale": guidance_scale,
+            "num_images": num_images,
+            "enable_safety_checker": enable_safety_checker,
+        }
+        if image_size == "custom":
+            arguments["image_size"] = {"width": width, "height": height}
+        else:
+            arguments["image_size"] = image_size
+        if seed != -1:
+            arguments["seed"] = seed
+
+        # Add LoRAs
+        loras = []
+        if lora_path_1:
+            loras.append({"path": lora_path_1, "scale": lora_scale_1})
+        if lora_path_2:
+            loras.append({"path": lora_path_2, "scale": lora_scale_2})
+        if loras:
+            arguments["loras"] = loras
+
+        try:
+            result = ApiHandler.submit_and_get_result("fal-ai/z-image/turbo/lora", arguments)
+            return ResultProcessor.process_image_result(result)
+        except Exception as e:
+            return ApiHandler.handle_image_generation_error("ZimageLora", e)
 
 # Node class mappings
 NODE_CLASS_MAPPINGS = {
@@ -2121,6 +2218,7 @@ NODE_CLASS_MAPPINGS = {
     "NanoBananaPro_fal": NanoBananaPro,
     "ReveTextToImage_fal": ReveTextToImage,
     "Dreamina31TextToImage_fal": Dreamina31TextToImage,
+    "Zimageturbo_fal": Zimageturbo,
 }
 
 
@@ -2151,4 +2249,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "NanoBananaPro_fal": "Nano Banana Pro (fal)",
     "ReveTextToImage_fal": "Reve Text-to-Image (fal)",
     "Dreamina31TextToImage_fal": "Dreamina v3.1 Text-to-Image (fal)",
+    "Zimageturbo_fal": "Z-image Turbo (fal)",
 }
