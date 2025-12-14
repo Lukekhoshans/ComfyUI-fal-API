@@ -2218,7 +2218,7 @@ NODE_CLASS_MAPPINGS = {
     "NanoBananaPro_fal": NanoBananaPro,
     "ReveTextToImage_fal": ReveTextToImage,
     "Dreamina31TextToImage_fal": Dreamina31TextToImage,
-    "Zimageturbo_fal": Zimageturbo,
+    "Zimageturbo_fal": Zimagelora,
 }
 
 
@@ -2249,5 +2249,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "NanoBananaPro_fal": "Nano Banana Pro (fal)",
     "ReveTextToImage_fal": "Reve Text-to-Image (fal)",
     "Dreamina31TextToImage_fal": "Dreamina v3.1 Text-to-Image (fal)",
-    "Zimageturbo_fal": "Z-image Turbo (fal)",
+    "Zimagelora_fal": "Z-image Lora (fal)",
 }
