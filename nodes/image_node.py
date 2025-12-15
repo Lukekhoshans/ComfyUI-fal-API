@@ -2120,12 +2120,10 @@ class Zimagelora:
                     {"default": 768, "min": 512, "max": 1536, "step": 16},
                 ),
                 "num_inference_steps": ("INT", {"default": 28, "min": 1, "max": 50}),
-                "guidance_scale": (
-                    "FLOAT",
-                    {"default": 3.0, "min": 0.0, "max": 20.0, "step": 0.1},
-                ),
                 "num_images": ("INT", {"default": 1, "min": 1, "max": 4}),
                 "enable_safety_checker": ("BOOLEAN", {"default": True}),
+                "enable_prompt_expansion": ("BOOLEAN", {"default": True}),
+                
             },
             "optional": {
                 "seed": ("INT", {"default": -1}),
@@ -2153,9 +2151,9 @@ class Zimagelora:
         width,
         height,
         num_inference_steps,
-        guidance_scale,
         num_images,
         enable_safety_checker,
+        enable_prompt_expansion,
         seed=-1,
         lora_path_1="",
         lora_scale_1=1.0,
